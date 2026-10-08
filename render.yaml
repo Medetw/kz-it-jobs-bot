@@ -1,22 +1,18 @@
 services:
-  - type: worker               # Background Worker — stays running 24/7, no HTTP needed
+  - type: worker
     name: kz-it-jobs-bot
-    runtime: docker            # Use our Dockerfile
+    runtime: docker
     dockerfilePath: ./Dockerfile
-    region: frankfurt          # Closest to Kazakhstan; alternatives: singapore, oregon
-    plan: free                 # Free tier is fine for a bot
-    disk:
-      name: bot-data
-      mountPath: /app/data     # Persistent volume for SQLite DB
-      sizeGB: 1
+    region: frankfurt
+    plan: free
     envVars:
+      # Use JSON fallback — no disk needed, no credit card required
       - key: DB_PATH
         value: /app/data/jobs.db
       - key: JSON_FALLBACK_PATH
-        value: /app/data/jobs_fallback.json
-      # ── Set these in the Render dashboard, NOT here (keep secrets out of git) ──
+        value: /tmp/jobs_fallback.json
       - key: BOT_TOKEN
-        sync: false            # Render will prompt you to fill this in dashboard
+        sync: false
       - key: TARGET_CHANNEL
         sync: false
       - key: ADMIN_IDS
@@ -25,3 +21,4 @@ services:
         value: "30"
       - key: POST_DELAY_SECONDS
         value: "3.0"
+
