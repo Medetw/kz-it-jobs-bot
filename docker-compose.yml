@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    container_name: kz_it_jobs_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - bot_data:/app/data
+    environment:
+      - DB_PATH=/app/data/jobs.db
+      - JSON_FALLBACK_PATH=/app/data/jobs_fallback.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  bot_data:
+    driver: local
